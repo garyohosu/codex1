@@ -1,0 +1,31 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Environments
+.env
+.env.*
+venv/
+.venv/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Python
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+
+# Logs
+*.log
+
+# Misc
+*.swp
+*.swo
+
