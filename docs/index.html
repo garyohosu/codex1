@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codex1 Generative Art Studio</title>
+    <meta name="description" content="美しいジェネラティブアートを生成・共有できるPWA。PNG/WebMエクスポートやシェアURLに対応。" />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">✨ Generative Art Studio</div>
+      <nav class="actions">
+        <button id="btn-random" class="btn">Randomize</button>
+        <button id="btn-export" class="btn">Export PNG</button>
+        <button id="btn-record" class="btn">Export WebM</button>
+        <button id="btn-share" class="btn">Share Link</button>
+        <button id="btn-full" class="btn" title="Fullscreen">⛶</button>
+      </nav>
+    </header>
+    <main class="layout">
+      <aside class="panel">
+        <div class="group">
+          <label>Algorithm</label>
+          <select id="algorithm"></select>
+        </div>
+        <div class="group">
+          <label>Palette</label>
+          <select id="palette"></select>
+        </div>
+        <div class="group">
+          <label>Seed</label>
+          <div class="row">
+            <input id="seed" type="text" placeholder="auto" />
+            <button id="btn-seed" class="btn small">🎲</button>
+          </div>
+        </div>
+        <div class="group">
+          <label class="row space">
+            <span>Animate</span>
+            <input id="animate" type="checkbox" checked />
+          </label>
+        </div>
+        <div class="group">
+          <label>Resolution</label>
+          <select id="resolution">
+            <option value="fit">Fit to window</option>
+            <option value="1080">1080p</option>
+            <option value="1440">1440p</option>
+            <option value="2160">4K UHD</option>
+          </select>
+        </div>
+        <div class="group">
+          <label>Speed</label>
+          <input id="speed" type="range" min="0" max="1.5" step="0.01" value="0.6" />
+        </div>
+        <p class="hint">URLに設定を埋め込んで共有できます。</p>
+      </aside>
+      <section class="stage">
+        <canvas id="canvas"></canvas>
+      </section>
+    </main>
+    <footer class="footer">
+      <span>Made with ❤ in codex1</span>
+      <a href="https://github.com/garyohosu/codex1" target="_blank" rel="noreferrer">GitHub</a>
+    </footer>
+
+    <script type="module" src="main.js"></script>
+  </body>
+  </html>
