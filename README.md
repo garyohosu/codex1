@@ -1,0 +1,1 @@
+After pushing, confirm the GitHub Actions pages-build-deployment workflow is green.
