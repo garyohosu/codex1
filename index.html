@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CGI API CORS Test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 16px; line-height: 1.6; }
+    button { padding: 10px 14px; margin: 6px 6px 6px 0; cursor: pointer; }
+    pre { background: #111; color: #eee; padding: 12px; border-radius: 8px; overflow:auto; }
+    .row { margin: 10px 0; }
+    input { padding: 8px; width: 360px; max-width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>GitHub Pages → Sakura CGI API テスト</h1>
+
+  <div class="row">
+    <label>API base URL：</label><br>
+    <input id="base" value="https://garyo.sakura.ne.jp/cgi/api" />
+  </div>
+
+  <div class="row">
+    <button onclick="hit('now.cgi?tz=jst')">GET now.cgi</button>
+    <button onclick="hit('uuid.cgi?n=3')">GET uuid.cgi</button>
+    <button onclick="hit('convert.cgi?kind=temp&value=25&from=c&to=f')">GET convert.cgi</button>
+    <button onclick="hitValidate()">POST validate.cgi</button>
+  </div>
+
+  <div class="row">
+    <div id="status">Ready.</div>
+  </div>
+
+  <pre id="out">{}</pre>
+
+  <script>
+    const out = (obj) => {
+      document.getElementById("out").textContent = JSON.stringify(obj, null, 2);
+    };
+    const setStatus = (s) => {
+      document.getElementById("status").textContent = s;
+    };
+
+    async function hit(path) {
+      const base = document.getElementById("base").value.replace(/\/+$/, "");
+      const url = `${base}/${path}`;
+      setStatus(`Fetching: ${url}`);
+
+      try {
+        const r = await fetch(url, { method: "GET", cache: "no-store" });
+        const t = await r.text();
+        let j;
+        try { j = JSON.parse(t); } catch { j = { raw: t }; }
+        out({ ok: r.ok, status: r.status, url, body: j });
+        setStatus("Done.");
+      } catch (e) {
+        out({ error: String(e), hint: "CORSなら DevTools Console/Network を確認" });
+        setStatus("Failed.");
+      }
+    }
+
+    async function hitValidate() {
+      const base = document.getElementById("base").value.replace(/\/+$/, "");
+      const url = `${base}/validate.cgi`;
+      setStatus(`Posting: ${url}`);
+
+      const payload = {
+        schema: {
+          type: "object",
+          required: ["name", "age"],
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 20 },
+            age: { type: "integer", minimum: 0, maximum: 130 }
+          },
+          additionalProperties: false
+        },
+        data: { name: "Alice", age: 20 }
+      };
+
+      try {
+        const r = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          cache: "no-store",
+        });
+        const t = await r.text();
+        let j;
+        try { j = JSON.parse(t); } catch { j = { raw: t }; }
+        out({ ok: r.ok, status: r.status, url, body: j });
+        setStatus("Done.");
+      } catch (e) {
+        out({ error: String(e), hint: "CORSなら DevTools Console/Network を確認" });
+        setStatus("Failed.");
+      }
+    }
+  </script>
+</body>
+</html>
